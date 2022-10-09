@@ -1,0 +1,31 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "grpc",
+    srcs = ["grpc.go"],
+    importpath = "github.com/todo-project/server/grpc",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//models",
+        "//pb",
+        "//services",
+        "@org_golang_google_grpc//codes",
+        "@org_golang_google_grpc//status",
+        "@org_mongodb_go_mongo_driver//mongo",
+    ],
+)
+
+go_test(
+    name = "grpc_test",
+    srcs = ["grpc_test.go"],
+    embed = [":grpc"],
+    deps = [
+        "//models",
+        "//pb",
+        "//services",
+        "//utils",
+        "@org_golang_google_grpc//:grpc",
+        "@org_mongodb_go_mongo_driver//bson/primitive",
+        "@org_mongodb_go_mongo_driver//mongo",
+    ],
+)

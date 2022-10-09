@@ -1,0 +1,89 @@
+syntax = "proto3";
+package pb;
+
+option go_package = "github.com/todo-project/pb";
+//import "google/protobuf/timestamp.proto";
+
+// Service to manage list of todo Items
+service ToDoService {
+  // Create new todo Item
+  rpc Create(CreateItemRequest) returns (TodoResponse);
+
+  // Get todo Item
+  rpc Get(GetItemByID) returns (TodoResponse);
+
+  // Update todo Item
+  rpc Update(UpdateItemRequest) returns (TodoResponse);
+
+  // Delete todo Item
+  rpc Delete(DeleteItemRequest) returns (DeleteItemResponse);
+
+  // Get all todo Items
+  rpc GetAll(GetItemsRequest) returns (stream ToDo);
+}
+
+// Todo Item structure
+message ToDo {
+  string Id = 1;
+  string Title = 2;
+  string Description = 3;
+  string User = 4;
+  bool Done = 5;
+//  google.protobuf.Timestamp Created_at = 6;
+//  google.protobuf.Timestamp Updated_at = 7;
+}
+
+message TodoResponse { ToDo ToDo = 1; }
+
+// Request data to create new todo Item
+message CreateItemRequest {
+  // Todo Item to add
+  string Title = 1;
+  string Description = 2;
+  string User = 3;
+}
+
+// Request data to read todo item
+message GetItemByID {
+  // Unique integer identifier of the todo item
+  string Id = 1;
+}
+
+// Request data to update todo item
+message UpdateItemRequest {
+  // Todo Item entity to update
+  string Id = 1;
+  optional string Title = 2;
+  optional string Description = 3;
+  optional string User = 4;
+  optional bool Done = 5;
+}
+
+// Request data to delete todo item
+message DeleteItemRequest {
+  // Unique integer identifier of the todo item to delete
+  string Id = 1;
+}
+
+// Contains status of delete operation
+message DeleteItemResponse {
+  // If the item was deleted successfully
+  bool Deleted = 1;
+}
+
+// Request data to read all todo item
+message GetItemsRequest {
+  // Enum to specify which Todos to return
+  enum TodoStatus {
+    DONE = 0;
+    PENDING = 1;
+    ALL = 2;
+  }
+  // Which todo items to return
+  optional TodoStatus Status = 1;
+  // Get items for a specific user
+  optional string User = 2;
+}
+
+
+

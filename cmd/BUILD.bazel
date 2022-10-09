@@ -1,0 +1,39 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@io_bazel_rules_docker//container:container.bzl", "container_image")
+
+go_library(
+    name = "cmd_lib",
+    srcs = [
+        "config.go",
+        "main.go",
+    ],
+    data = ["dev.env"],
+    importpath = "github.com/todo-project/cmd",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//pb",
+        "//server/grpc",
+        "//services",
+        "@com_github_gin_gonic_gin//:gin",
+        "@com_github_spf13_viper//:viper",
+        "@org_golang_google_grpc//:grpc",
+        "@org_golang_google_grpc//reflection",
+        "@org_mongodb_go_mongo_driver//mongo",
+        "@org_mongodb_go_mongo_driver//mongo/options",
+        "@org_mongodb_go_mongo_driver//mongo/readpref",
+    ],
+)
+
+go_binary(
+    name = "cmd",
+    embed = [":cmd_lib"],
+    visibility = ["//visibility:public"],
+)
+
+load("@io_bazel_rules_docker//go:image.bzl", "go_image")
+
+go_image(
+    name = "image",
+    embed = [":cmd_lib"],
+    visibility = ["//visibility:public"],
+)

@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "models",
+    srcs = ["models.go"],
+    importpath = "github.com/todo-project/models",
+    visibility = ["//visibility:public"],
+    deps = ["@org_mongodb_go_mongo_driver//bson/primitive"],
+)
